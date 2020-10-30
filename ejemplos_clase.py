@@ -231,7 +231,7 @@ if __name__ == '__main__':
 
     count_persona('Argentina')
 
-    # update_persona_nationality('Max', 'Holanda')
+    #update_persona_nationality('Max', 'Holanda')
     # show()
 
     # group = [('Max', 40, 'Estados Unidos'),

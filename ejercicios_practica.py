@@ -109,17 +109,17 @@ def fill():
     c = conn.cursor()
 
     values = [(1, 'Julio'), (2, 'Fernanda'), (3, 'Valentino')]
-    group = [(1, 'Margarita', 14, 1, 1), 
-            (2, 'Vicente', 16, 2, 2), 
-            (3, 'Sofia', 17, 3, 2),
-            (4, 'Carlos', 18, 4, 3),
-            (5, 'Morena', 19, 6, 2)]
+    group = [(1, 'Margarita', 14, 1, 'Julio'), 
+            (2, 'Vicente', 16, 2, 'Fernanda'), 
+            (3, 'Sofia', 17, 3, 'Fernanda'),
+            (4, 'Carlos', 18, 4,'Valentino'),
+            (5, 'Morena', 19, 6, 'Fernanda')]
 
     c.executemany("""
         INSERT INTO estudiante(id, name, age, grade, fk_tutor_id)
         SELECT ?,?,?,?, t.id
         FROM tutor as t
-        WHERE t.id =?;""", group)
+        WHERE t.name = ?;""", group)
     
     conn.commit()
     conn.close() 

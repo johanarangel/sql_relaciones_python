@@ -175,6 +175,48 @@ def search_author(book_title):
     conn.commit()
     conn.close()
 
+def update(id, nuevo_autor):
+    
+    conn = sqlite3.connect('biblioteca.db')
+    conn.execute("PRAGMA foreign_keys = 1")
+    c = conn.cursor()
+
+    rowcount = c.execute("UPDATE escritor SET name = ? WHERE id =?",
+                        (nuevo_autor, id)).rowcount
+
+    print('Filas actualizadas:', rowcount)
+        
+    c.execute("""
+        SELECT l.id, l.title, l.pags, e.name as autor_name
+        FROM libro as l, escritor as e 
+        WHERE l.fk_author_id = e.id AND e.id=?;""", (id,))
+
+    while True:
+        row = c.fetchone()
+        if row is None:
+            break
+        print(row)
+        
+    conn.commit()
+    conn.close()
+
+def delete(titulo):
+    
+    conn = sqlite3.connect('biblioteca.db')
+    conn.execute("PRAGMA foreign_keys = 1")
+    c = conn.cursor()
+
+    rowcount = c.execute("DELETE FROM libro WHERE title = ?", (titulo,)).rowcount            
+
+    print('Filas actualizadas:', rowcount)
+    
+    for row in c.execute("""SELECT * FROM libro;"""):
+        print(row)
+        
+    conn.commit()
+    conn.close()
+
+
 if __name__ == "__main__":
     #------CREAR TABLA--------
     create_schema()
@@ -185,5 +227,14 @@ if __name__ == "__main__":
     fetch(3)  
     fetch(20) 
 
-    #---------BUSCAR AUTHOR POR TITLE-------- 
+    # #---------BUSCAR AUTHOR POR TITLE-------- 
     print(search_author('Relato de un naufrago'))
+
+    #---------ACTUALIZAR LA INFO-------- 
+    id = 5
+    nuevo_autor = 'Garrido'
+
+    update(id, nuevo_autor)
+
+    #---------BORRAR LIBRO POR TITLE-------- 
+    delete('Cien anios de soledad')
